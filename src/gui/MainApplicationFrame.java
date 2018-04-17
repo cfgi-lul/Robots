@@ -93,6 +93,7 @@ public class MainApplicationFrame extends JFrame
     {
         desktopPane.add(frame);
         frame.setVisible(true);
+        //test github integration
     }
 
     protected void addWindow(JInternalFrame frame, JInternalFrame frame1)
