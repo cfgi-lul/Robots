@@ -83,9 +83,7 @@ public class MainApplicationFrame extends JFrame
             int t2 = sc.nextInt();
             logWindow.setSize(t2, t1);
         }
-
         Logger.debug("Протокол работает");
-
         return logWindow;
     }
     
@@ -93,7 +91,6 @@ public class MainApplicationFrame extends JFrame
     {
         desktopPane.add(frame);
         frame.setVisible(true);
-        //test github integration
     }
 
     protected void addWindow(JInternalFrame frame, JInternalFrame frame1)
