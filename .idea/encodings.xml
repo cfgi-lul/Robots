@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Windows.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/gui/GameWindow.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/gui/LogWindow.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/gui/MainApplicationFrame.java" charset="windows-1251" />
+    <file url="PROJECT" charset="windows-1251" />
+  </component>
+</project>
