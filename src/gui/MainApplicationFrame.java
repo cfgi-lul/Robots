@@ -227,14 +227,11 @@ public class MainApplicationFrame extends JFrame
             for (JInternalFrame e : desktopPane.getAllFrames()) {
                 windows.write(e.getTitle() + '\n');
                 windows.write(String.valueOf(e.getLocation().x) + " ");
-                windows.write(String.valueOf(e.getLocation().y));
-                windows.write('\n');
-                windows.write(String.valueOf(e.getSize().height));
-                windows.write('\n');
-                windows.write(String.valueOf(e.getSize().width));
-                windows.write('\n');
+                windows.write(String.valueOf(e.getLocation().y) + '\n');
+                windows.write(String.valueOf(e.getSize().height) + '\n');
+                windows.write(String.valueOf(e.getSize().width)+'\n');
             }
-            windows.flush();
+            windows.close();
             System.exit(0);
         }
     }
