@@ -4,17 +4,12 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Scanner;
-import java.util.Arrays;
 
-import javax.annotation.Nonnegative;
 import javax.swing.*;
 
-import com.intellij.ide.actions.MaintenanceAction;
 import log.Logger;
 
 /**
@@ -23,13 +18,13 @@ import log.Logger;
  * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
  *
  */
-public class MainApplicationFrame extends JFrame
+class MainApplicationFrame extends JFrame
 {
     private final JDesktopPane desktopPane = new JDesktopPane();
-    File file  = new File("Windows.txt");
-    Scanner sc = new Scanner(file);
+    private File file  = new File("Windows.txt");
+    private Scanner sc = new Scanner(file);
     
-    public MainApplicationFrame() throws IOException {
+    MainApplicationFrame() throws IOException {
         //Make the big window be indented 50 pixels from each edge
         //of the screen.
 
@@ -74,7 +69,7 @@ public class MainApplicationFrame extends JFrame
 
 
 
-    protected LogWindow createLogWindow()
+    private LogWindow createLogWindow()
     {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
         if(sc.hasNextInt()) {
@@ -87,13 +82,13 @@ public class MainApplicationFrame extends JFrame
         return logWindow;
     }
     
-    protected void addWindow(JInternalFrame frame)
+    private void addWindow(JInternalFrame frame)
     {
         desktopPane.add(frame);
         frame.setVisible(true);
     }
 
-    protected void addWindow(JInternalFrame frame, JInternalFrame frame1)
+    private void addWindow(JInternalFrame frame, JInternalFrame frame1)
     {
         desktopPane.add(frame);
         desktopPane.add(frame1);
@@ -101,31 +96,31 @@ public class MainApplicationFrame extends JFrame
         frame1.setVisible(true);
     }
 
-    protected JMenu createMenu(String name, int key) {
-        JMenu menu = new JMenu(name);
+    private JMenu createMenu(int key) {
+        JMenu menu = new JMenu("Документы");
         menu.setMnemonic(key);
         return menu;
     }
 
-    protected JMenu createMenu(String name, int key, String description) {
+    private JMenu createMenu(String name, int key, String description) {
         JMenu menu = new JMenu(name);
         menu.setMnemonic(key);
         menu.getAccessibleContext().setAccessibleDescription(description);
         return menu;
     }
     
-    protected JMenuBar createMenuBar() {
+    private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
         //Set up the lone menu.
-        JMenu menu = createMenu("Документы", KeyEvent.VK_D);
+        JMenu menu = createMenu(KeyEvent.VK_D);
         menuBar.add(menu);
 
         //Set up the first menu item.
         JMenuItem menuItem = new JMenuItem("Новое окно");
         menuItem.setMnemonic(KeyEvent.VK_N);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_N, ActionEvent.ALT_MASK));
+                KeyEvent.VK_N, InputEvent.ALT_MASK));
         menuItem.addActionListener((event) -> {
             Object[] options = {"Оба окна",
                     "Игровое поле",
@@ -161,7 +156,7 @@ public class MainApplicationFrame extends JFrame
         menuItem = new JMenuItem("Сохранить и Закрыть");
         menuItem.setMnemonic(KeyEvent.VK_Q);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_Q, ActionEvent.ALT_MASK));
+                KeyEvent.VK_Q, InputEvent.ALT_MASK));
         menuItem.addActionListener((event) -> {
             try {
                 exit();
@@ -197,9 +192,7 @@ public class MainApplicationFrame extends JFrame
 
         {
             JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
-            addLogMessageItem.addActionListener((event) -> {
-                Logger.debug("Новая строка");
-            });
+            addLogMessageItem.addActionListener((event) -> Logger.debug("Новая строка"));
             testMenu.add(addLogMessageItem);
         }
 
