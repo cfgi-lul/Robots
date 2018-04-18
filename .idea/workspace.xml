@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="42cac3d3-9c0d-43c4-b7db-087939fd76b0" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Windows.txt" afterPath="$PROJECT_DIR$/Windows.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gui/RobotsProgram.java" afterPath="$PROJECT_DIR$/src/gui/RobotsProgram.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/log/LogChangeListener.java" afterPath="$PROJECT_DIR$/src/log/LogChangeListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/log/LogEntry.java" afterPath="$PROJECT_DIR$/src/log/LogEntry.java" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -434,7 +430,14 @@
       <option name="project" value="LOCAL" />
       <updated>1524046924598</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="It is now 100% better">
+      <created>1524047763554</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1524047763554</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
