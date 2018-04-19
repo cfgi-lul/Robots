@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="42cac3d3-9c0d-43c4-b7db-087939fd76b0" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Windows.txt" afterPath="$PROJECT_DIR$/Windows.txt" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,6 +15,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="MainApplicationFrame.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/gui/MainApplicationFrame.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="114">
+              <caret line="26" column="46" lean-forward="false" selection-start-line="26" selection-start-column="26" selection-end-line="26" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="RobotsProgram.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui/RobotsProgram.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -24,11 +35,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Windows.txt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Windows.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Windows.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="3" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+            <state relative-caret-position="240">
+              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -95,7 +106,7 @@
       <file leaf-file-name="GameVisualizer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui/GameVisualizer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="311">
+            <state relative-caret-position="-626">
               <caret line="96" column="9" lean-forward="true" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
               <folding>
                 <element signature="e#429#430#0" expanded="true" />
@@ -113,18 +124,6 @@
             <state relative-caret-position="210">
               <caret line="17" column="5" lean-forward="false" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LogWindow.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gui/LogWindow.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="21" column="21" lean-forward="false" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="21" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -164,7 +163,6 @@
       <list>
         <option value="$PROJECT_DIR$/src/gui/form.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/gui/MainApplicationFrame.java" />
         <option value="$PROJECT_DIR$/src/gui/GameWindow.java" />
         <option value="$PROJECT_DIR$/src/gui/LogWindow.java" />
         <option value="$PROJECT_DIR$/src/gui/GameVisualizer.java" />
@@ -174,6 +172,7 @@
         <option value="$PROJECT_DIR$/src/log/Logger.java" />
         <option value="$PROJECT_DIR$/src/gui/RobotsProgram.java" />
         <option value="$PROJECT_DIR$/Windows.txt" />
+        <option value="$PROJECT_DIR$/src/gui/MainApplicationFrame.java" />
       </list>
     </option>
   </component>
@@ -437,7 +436,14 @@
       <option name="project" value="LOCAL" />
       <updated>1524047763554</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="It is now 100% better">
+      <created>1524047770126</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1524047770126</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -496,10 +502,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="22" column="2" lean-forward="false" selection-start-line="22" selection-start-column="2" selection-end-line="22" selection-end-column="2" />
-          <folding>
-            <element signature="e#1817#2070#0" expanded="true" />
-            <element signature="e#2069#2070#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -539,10 +542,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#1817#2070#0" expanded="true" />
-            <element signature="e#2069#2070#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -780,44 +780,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui/MainApplicationFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="131" column="49" lean-forward="true" selection-start-line="131" selection-start-column="49" selection-end-line="131" selection-end-column="49" />
-          <folding>
-            <element signature="e#1817#2070#0" expanded="true" />
-            <element signature="e#2069#2070#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/gui/LogWindow.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="219">
           <caret line="21" column="21" lean-forward="false" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui/GameWindow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="17" column="5" lean-forward="false" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui/GameVisualizer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="96" column="9" lean-forward="true" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
-          <folding>
-            <element signature="e#429#430#0" expanded="true" />
-            <element signature="e#487#488#0" expanded="true" />
-            <element signature="e#963#1111#0" expanded="true" />
-            <element signature="e#1110#1111#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -870,6 +838,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Windows.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/gui/RobotsProgram.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -878,10 +854,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Windows.txt">
+    <entry file="file://$PROJECT_DIR$/src/gui/GameWindow.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="3" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+        <state relative-caret-position="210">
+          <caret line="17" column="5" lean-forward="false" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui/GameVisualizer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-626">
+          <caret line="96" column="9" lean-forward="true" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
+          <folding>
+            <element signature="e#429#430#0" expanded="true" />
+            <element signature="e#487#488#0" expanded="true" />
+            <element signature="e#963#1111#0" expanded="true" />
+            <element signature="e#1110#1111#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui/MainApplicationFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="26" column="46" lean-forward="false" selection-start-line="26" selection-start-column="26" selection-end-line="26" selection-end-column="46" />
           <folding />
         </state>
       </provider>
