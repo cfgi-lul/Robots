@@ -23,7 +23,7 @@ class MainApplicationFrame extends JFrame
     private final JDesktopPane desktopPane = new JDesktopPane();
     private File file  = new File("Windows.txt");
     private Scanner sc = new Scanner(file);
-    
+
     MainApplicationFrame() throws IOException {
         //Make the big window be indented 50 pixels from each edge
         //of the screen.
@@ -38,6 +38,7 @@ class MainApplicationFrame extends JFrame
 
         //reading windows.txt for reestablish closed windows
 
+
         while(sc.hasNextLine()){
             String tempScanner = sc.nextLine();
             if (tempScanner.equals("Игровое поле")){
@@ -51,8 +52,12 @@ class MainApplicationFrame extends JFrame
             else if (tempScanner.equals("Протокол работы")){
                 addWindow(createLogWindow());
             }
+            else if (tempScanner.equals("Координаты робота")){
+                addWindow(createCoordinatesWindow());
+            }
         }
 
+        addWindow(new CoordinatesWindow(new GameWindow()));
         setJMenuBar(createMenuBar());
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -67,7 +72,17 @@ class MainApplicationFrame extends JFrame
 
     }
 
+    private CoordinatesWindow createCoordinatesWindow(){
+        CoordinatesWindow coordinatesWindow = new CoordinatesWindow(new GameWindow());
+        if(sc.hasNextInt()) {
+            coordinatesWindow.setLocation(sc.nextInt(), sc.nextInt());
+            int t1 = sc.nextInt();
+            int t2 = sc.nextInt();
+            coordinatesWindow.setSize(t2, t1);
+        }
+        return coordinatesWindow;
 
+    }
 
     private LogWindow createLogWindow()
     {
@@ -153,7 +168,7 @@ class MainApplicationFrame extends JFrame
         menu.add(menuItem);
 
         //Set up the second menu item.
-        menuItem = new JMenuItem("Сохранить и Закрыть");
+        menuItem = new JMenuItem("Закрыть и Сохранить");
         menuItem.setMnemonic(KeyEvent.VK_Q);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_Q, InputEvent.ALT_MASK));
