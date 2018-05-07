@@ -3,25 +3,30 @@ package gui;
 import java.awt.Frame;
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 public class RobotsProgram
 {
-    public static void main(String[] args) throws IOException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 //        UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 //        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 //        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-      SwingUtilities.invokeLater(() -> {
-        MainApplicationFrame frame = null;
-        try {
-          frame = new MainApplicationFrame();
-        } catch (IOException e) {
-          e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-          assert frame != null;
-          frame.pack();
-        frame.setVisible(true);
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-      });
+        SwingUtilities.invokeLater(() -> {
+            MainApplicationFrame frame = null;
+            try {
+                frame = new MainApplicationFrame();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            assert frame != null;
+            frame.pack();
+            frame.setVisible(true);
+            frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+        });
     }}

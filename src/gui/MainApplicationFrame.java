@@ -1,63 +1,26 @@
 package gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 import javax.swing.*;
 
 import log.Logger;
 
-/**
- * Что требуется сделать:
- * 1. Метод создания меню перегружен функционалом и трудно читается. 
- * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
- *
- */
 class MainApplicationFrame extends JFrame
 {
     private final JDesktopPane desktopPane = new JDesktopPane();
-    private File file  = new File("Windows.txt");
-    private Scanner sc = new Scanner(file);
 
     MainApplicationFrame() throws IOException {
-        //Make the big window be indented 50 pixels from each edge
-        //of the screen.
 
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
                 screenSize.width - inset * 2,
                 screenSize.height - inset * 2);
-
         setContentPane(desktopPane);
-
-        //reading windows.txt for reestablish closed windows
-
-
-        while(sc.hasNextLine()){
-            String tempScanner = sc.nextLine();
-            if (tempScanner.equals("Игровое поле")){
-                GameWindow gameWindow = new GameWindow();
-                gameWindow.setLocation(sc.nextInt(), sc.nextInt());
-                int t1 = sc.nextInt();
-                int t2 = sc.nextInt();
-                gameWindow.setSize(t2, t1);
-                addWindow(gameWindow);
-            }
-            else if (tempScanner.equals("Протокол работы")){
-                addWindow(createLogWindow());
-            }
-            else if (tempScanner.equals("Координаты робота")){
-                addWindow(createCoordinatesWindow());
-            }
-        }
-
-        addWindow(new CoordinatesWindow(new GameWindow()));
         setJMenuBar(createMenuBar());
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -69,46 +32,90 @@ class MainApplicationFrame extends JFrame
                 }
             }
         });
+        //reading from Windows.txt
+        try (Scanner sc = new Scanner(new File("Windows.txt"))) {
+            Robot robot = new Robot();
+            boolean gameAttached = false, coordinatesAttached = false;
+            while (sc.hasNextLine()) {
 
-    }
-
-    private CoordinatesWindow createCoordinatesWindow(){
-        CoordinatesWindow coordinatesWindow = new CoordinatesWindow(new GameWindow());
-        if(sc.hasNextInt()) {
-            coordinatesWindow.setLocation(sc.nextInt(), sc.nextInt());
-            int t1 = sc.nextInt();
-            int t2 = sc.nextInt();
-            coordinatesWindow.setSize(t2, t1);
+                String tempScanner = sc.nextLine();
+                switch (tempScanner) {
+                    case "Игровое поле":
+                        if (!gameAttached) {
+                            GameWindow gameWindow = new GameWindow(robot);
+                            gameWindow.setLocation(sc.nextInt(), sc.nextInt());
+                            int t1 = sc.nextInt();
+                            int t2 = sc.nextInt();
+                            gameWindow.setSize(t2, t1);
+                            addWindow(gameWindow);
+                            gameAttached = true;
+                        } else {
+                            robot = new Robot();
+                            GameWindow gameWindow = new GameWindow(robot);
+                            gameWindow.setLocation(sc.nextInt(), sc.nextInt());
+                            int t1 = sc.nextInt();
+                            int t2 = sc.nextInt();
+                            gameWindow.setSize(t2, t1);
+                            addWindow(gameWindow);
+                            coordinatesAttached = false;
+                        }
+                        break;
+                    case "Протокол работы":
+                        addWindow(createLogWindow());
+                        break;
+                    case "Координаты робота":
+                        CoordinatesWindow coordinatesWindow = createCoordinatesWindow();
+                        if (!coordinatesAttached) {
+                            robot.addObserver(coordinatesWindow);
+                            coordinatesWindow.setLocation(sc.nextInt(), sc.nextInt());
+                            int t1 = sc.nextInt();
+                            int t2 = sc.nextInt();
+                            coordinatesWindow.setSize(t2, t1);
+                            addWindow(coordinatesWindow);
+                            coordinatesAttached = true;
+                        } else if (gameAttached) {
+                            robot = new Robot();
+                            robot.addObserver(coordinatesWindow);
+                            coordinatesWindow.setLocation(sc.nextInt(), sc.nextInt());
+                            int t1 = sc.nextInt();
+                            int t2 = sc.nextInt();
+                            coordinatesWindow.setSize(t2, t1);
+                            addWindow(coordinatesWindow);
+                            gameAttached = false;
+                        }
+                        break;
+                }
+            }
         }
-        return coordinatesWindow;
-
+        setJMenuBar(createMenuBar());
     }
 
+    //create log window
     private LogWindow createLogWindow()
     {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        if(sc.hasNextInt()) {
-            logWindow.setLocation(sc.nextInt(), sc.nextInt());
-            int t1 = sc.nextInt();
-            int t2 = sc.nextInt();
-            logWindow.setSize(t2, t1);
-        }
+        logWindow.setLocation(10,10);
+        logWindow.setSize(300, 800);
+        setMinimumSize(logWindow.getSize());
+        logWindow.pack();
         Logger.debug("Протокол работает");
         return logWindow;
     }
-    
+
+    //create CoordinetesWindow
+    private CoordinatesWindow createCoordinatesWindow() {
+        CoordinatesWindow coordinatesWindow = new CoordinatesWindow();
+        coordinatesWindow.setLocation(222, 9);
+        coordinatesWindow.setSize(475, 85);
+        setMinimumSize(coordinatesWindow.getSize());
+        coordinatesWindow.pack();
+        return  coordinatesWindow;
+    }
+
     private void addWindow(JInternalFrame frame)
     {
         desktopPane.add(frame);
         frame.setVisible(true);
-    }
-
-    private void addWindow(JInternalFrame frame, JInternalFrame frame1)
-    {
-        desktopPane.add(frame);
-        desktopPane.add(frame1);
-        frame.setVisible(true);
-        frame1.setVisible(true);
     }
 
     private JMenu createMenu(int key) {
@@ -123,7 +130,7 @@ class MainApplicationFrame extends JFrame
         menu.getAccessibleContext().setAccessibleDescription(description);
         return menu;
     }
-    
+
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
@@ -149,14 +156,27 @@ class MainApplicationFrame extends JFrame
                     options,
                     options[2]);
             if (n == 0) {
-                GameWindow gameWindow = new GameWindow();
+                Robot robot = new Robot();
+                CoordinatesWindow coordinatesWindow = createCoordinatesWindow();
+                robot.addObserver(coordinatesWindow);
+                addWindow(coordinatesWindow);
+
+                GameWindow gameWindow = new GameWindow(robot);
                 LogWindow logWindow = createLogWindow();
-                gameWindow.setSize(400, 400);
-                addWindow(logWindow, gameWindow);
+                gameWindow.setSize(475,  443);
+                gameWindow.setLocation(222,92);
+                addWindow(logWindow);
+                addWindow(gameWindow);
                 this.invalidate();
             } else if (n == 1) {
-                GameWindow gameWindow = new GameWindow();
-                gameWindow.setSize(400, 400);
+                Robot robot = new Robot();
+                CoordinatesWindow coordinatesWindow = createCoordinatesWindow();
+                robot.addObserver(coordinatesWindow);
+                addWindow(coordinatesWindow);
+
+                GameWindow gameWindow = new GameWindow(robot);
+                gameWindow.setSize(475,  443);
+                gameWindow.setLocation(222,92);
                 addWindow(gameWindow);
                 this.invalidate();
             } else if (n == 2) {
@@ -216,9 +236,6 @@ class MainApplicationFrame extends JFrame
         return menuBar;
     }
 
-//    this method for going out of program
-//    and saving mesurements of closed windows
-
     private void exit() throws IOException {
         Object[] options = {"Да",
                 "Нет"};
@@ -243,7 +260,7 @@ class MainApplicationFrame extends JFrame
             System.exit(0);
         }
     }
-    
+
     private void setLookAndFeel(String className)
     {
         try
@@ -252,7 +269,7 @@ class MainApplicationFrame extends JFrame
             SwingUtilities.updateComponentTreeUI(this);
         }
         catch (ClassNotFoundException | InstantiationException
-            | IllegalAccessException | UnsupportedLookAndFeelException e)
+                | IllegalAccessException | UnsupportedLookAndFeelException e)
         {
             // just ignore
         }

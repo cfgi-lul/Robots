@@ -1,7 +1,7 @@
 package log;
 
-import java.util.ArrayList;
-import java.util.Collections;
+
+import java.util.*;
 
 /**
  * Что починить:
@@ -12,7 +12,7 @@ import java.util.Collections;
  * величиной m_iQueueLength (т.е. реально нужна очередь сообщений 
  * ограниченного размера) 
  */
-public class LogWindowSource
+public class LogWindowSource extends Observable
 {
     private int m_iQueueLength;
     
@@ -43,6 +43,19 @@ public class LogWindowSource
             m_listeners.remove(listener);
             m_activeListeners = null;
         }
+    }
+
+    private List<Observer> coord = new ArrayList<>();
+
+    public void refresh(String str) {
+
+        for (Observer e : this.coord) {
+            e.update(this, str);
+        }
+    }
+
+    public void register(Observer obs) {
+        coord.add(obs);
     }
     
     public void append(LogLevel logLevel, String strMessage)
