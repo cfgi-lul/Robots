@@ -16,4 +16,5 @@ class GameWindow extends JInternalFrame
         getContentPane().add(panel);
         pack();
     }
+
 }

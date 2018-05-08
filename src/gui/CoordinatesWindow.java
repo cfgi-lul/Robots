@@ -23,7 +23,7 @@ public class CoordinatesWindow extends JInternalFrame implements Observer {
     public void update(Observable o, Object arg) {
         Robot robotModel = (Robot) arg;
         m_coordinatesContent.setText("X: " + format.format(robotModel.getPositionX())
-                + "\tY:" + format.format(robotModel.getPositionY())
+                + "\tY: " + format.format(robotModel.getPositionY())
                 + "\tTarget X: " + robotModel.getTargetPositionX()
                 + "\tTarget Y: " + robotModel.getTargetPositionY()
                 + "\tDirection: " + format.format(robotModel.getDirection()));

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.*;
 
 public class Robot extends Observable {
 
@@ -13,11 +14,17 @@ public class Robot extends Observable {
     private volatile double m_robotPositionY = 100;
     private volatile double m_robotDirection = 0;
 
+
+    private volatile ArrayList<Square> squares = new ArrayList<>();
+    private volatile ArrayList<Circle> circles = new ArrayList<>();
+
     private volatile int m_targetPositionX = 150;
     private volatile int m_targetPositionY = 100;
 
     private static final double maxVelocity = 0.1;
     private static final double maxAngularVelocity = 0.001;
+    private int m_figurePositionX;
+    private int m_figurePositionY;
 
     public double getPositionX() {
         return m_robotPositionX;
@@ -38,6 +45,34 @@ public class Robot extends Observable {
     public int getTargetPositionY() {
         return m_targetPositionY;
     }
+
+
+    public int getFigurePositionY() {
+        return m_targetPositionY;
+    }
+
+    public int getFigurePositionX() {
+        return m_targetPositionY;
+    }
+
+
+
+    public void addSquare(Point point) {
+        squares.add(new Square(10,10,point.x, point.y));
+    }
+
+    public void addCircle(Point point) {
+        circles.add(new Circle(point.x, point.y,10));
+    }
+
+    public ArrayList<Square> getSquares() {
+        return squares;
+    }
+
+    public ArrayList<Circle> getCircles() {
+        return circles;
+    }
+
 
     private static Timer initTimer()
     {
@@ -64,14 +99,17 @@ public class Robot extends Observable {
         }, 0, 10);
     }
 
-    protected void setTargetPosition(Point targetPoint)
-    {
+    protected void setTargetPosition(Point targetPoint) {
         m_targetPositionX = targetPoint.x;
         m_targetPositionY = targetPoint.y;
     }
 
-    private static double distance(double x1, double y1, double x2, double y2)
-    {
+    protected void setFigure(Point targetPoint){
+        m_figurePositionX = targetPoint.x;
+        m_figurePositionY = targetPoint.y;
+    }
+
+    private static double distance(double x1, double y1, double x2, double y2) {
         double diffX = x1 - x2;
         double diffY = y1 - y2;
         return Math.sqrt(diffX * diffX + diffY * diffY);
@@ -85,8 +123,7 @@ public class Robot extends Observable {
         return asNormalizedRadians(Math.atan2(diffY, diffX));
     }
 
-    protected void tick()
-    {
+    protected void tick() {
         double distance = distance(m_targetPositionX, m_targetPositionY,
                 m_robotPositionX, m_robotPositionY);
         if (distance < 0.5)
