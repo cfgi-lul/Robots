@@ -61,7 +61,7 @@ class MainApplicationFrame extends JFrame
                         }
                         break;
                     case "Протокол работы":
-                        addWindow(createLogWindow());
+                        addWindow(createLogWindow(sc.nextInt(),sc.nextInt(),sc.nextInt(),sc.nextInt()));
                         break;
                     case "Координаты робота":
                         CoordinatesWindow coordinatesWindow = createCoordinatesWindow();
@@ -91,11 +91,11 @@ class MainApplicationFrame extends JFrame
     }
 
     //create log window
-    private LogWindow createLogWindow()
+    private LogWindow createLogWindow(int x, int y , int sizeX, int sizeY)
     {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        logWindow.setLocation(10,10);
-        logWindow.setSize(300, 800);
+        logWindow.setLocation(x,y);
+        logWindow.setSize(sizeY, sizeX);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
         Logger.debug("Протокол работает");
@@ -162,7 +162,7 @@ class MainApplicationFrame extends JFrame
                 addWindow(coordinatesWindow);
 
                 GameWindow gameWindow = new GameWindow(robot);
-                LogWindow logWindow = createLogWindow();
+                LogWindow logWindow = createLogWindow(222,9,475,82);
                 gameWindow.setSize(475,  443);
                 gameWindow.setLocation(222,92);
                 addWindow(logWindow);
@@ -180,7 +180,7 @@ class MainApplicationFrame extends JFrame
                 addWindow(gameWindow);
                 this.invalidate();
             } else if (n == 2) {
-                addWindow(createLogWindow());
+                addWindow(createLogWindow(222,9,475,82));
                 this.invalidate();
             }
         });
