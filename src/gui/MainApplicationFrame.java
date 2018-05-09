@@ -8,9 +8,9 @@ import java.util.*;
 import javax.swing.*;
 
 import log.Logger;
+import org.apache.velocity.util.ArrayListWrapper;
 
-class MainApplicationFrame extends JFrame
-{
+class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane = new JDesktopPane();
 
     MainApplicationFrame() throws IOException {
@@ -61,7 +61,7 @@ class MainApplicationFrame extends JFrame
                         }
                         break;
                     case "Протокол работы":
-                        addWindow(createLogWindow(sc.nextInt(),sc.nextInt(),sc.nextInt(),sc.nextInt()));
+                        addWindow(createLogWindow(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt()));
                         break;
                     case "Координаты робота":
                         CoordinatesWindow coordinatesWindow = createCoordinatesWindow();
@@ -91,10 +91,9 @@ class MainApplicationFrame extends JFrame
     }
 
     //create log window
-    private LogWindow createLogWindow(int x, int y , int sizeX, int sizeY)
-    {
+    private LogWindow createLogWindow(int x, int y, int sizeX, int sizeY) {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        logWindow.setLocation(x,y);
+        logWindow.setLocation(x, y);
         logWindow.setSize(sizeY, sizeX);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
@@ -109,11 +108,10 @@ class MainApplicationFrame extends JFrame
         coordinatesWindow.setSize(475, 85);
         setMinimumSize(coordinatesWindow.getSize());
         coordinatesWindow.pack();
-        return  coordinatesWindow;
+        return coordinatesWindow;
     }
 
-    private void addWindow(JInternalFrame frame)
-    {
+    private void addWindow(JInternalFrame frame) {
         desktopPane.add(frame);
         frame.setVisible(true);
     }
@@ -162,9 +160,9 @@ class MainApplicationFrame extends JFrame
                 addWindow(coordinatesWindow);
 
                 GameWindow gameWindow = new GameWindow(robot);
-                LogWindow logWindow = createLogWindow(222,9,475,82);
-                gameWindow.setSize(475,  443);
-                gameWindow.setLocation(222,92);
+                LogWindow logWindow = createLogWindow(222, 9, 475, 82);
+                gameWindow.setSize(475, 443);
+                gameWindow.setLocation(222, 92);
                 addWindow(logWindow);
                 addWindow(gameWindow);
                 this.invalidate();
@@ -175,12 +173,12 @@ class MainApplicationFrame extends JFrame
                 addWindow(coordinatesWindow);
 
                 GameWindow gameWindow = new GameWindow(robot);
-                gameWindow.setSize(475,  443);
-                gameWindow.setLocation(222,92);
+                gameWindow.setSize(475, 443);
+                gameWindow.setLocation(222, 92);
                 addWindow(gameWindow);
                 this.invalidate();
             } else if (n == 2) {
-                addWindow(createLogWindow(222,9,475,82));
+                addWindow(createLogWindow(222, 9, 475, 82));
                 this.invalidate();
             }
         });
@@ -202,7 +200,7 @@ class MainApplicationFrame extends JFrame
         menu.add(menuItem);
 
         JMenu lookAndFeelMenu = createMenu("Режим отображения",
-                KeyEvent.VK_V,"Управление режимом отображения приложения");
+                KeyEvent.VK_V, "Управление режимом отображения приложения");
 
         {
             JMenuItem systemLookAndFeel = new JMenuItem("Системная схема", KeyEvent.VK_S);
@@ -223,7 +221,7 @@ class MainApplicationFrame extends JFrame
         }
 
         JMenu testMenu = createMenu("Тесты",
-                KeyEvent.VK_T,"Тестовые команды");
+                KeyEvent.VK_T, "Тестовые команды");
 
         {
             JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
@@ -247,30 +245,33 @@ class MainApplicationFrame extends JFrame
                 null,
                 options,
                 options[1]);
-        if (n==0) {
+        if (n == 0) {
             FileWriter windows = new FileWriter("Windows.txt", false);
             for (JInternalFrame e : desktopPane.getAllFrames()) {
                 windows.write(e.getTitle() + '\n');
                 windows.write(String.valueOf(e.getLocation().x) + " ");
                 windows.write(String.valueOf(e.getLocation().y) + '\n');
                 windows.write(String.valueOf(e.getSize().height) + '\n');
-                windows.write(String.valueOf(e.getSize().width)+'\n');
+                windows.write(String.valueOf(e.getSize().width) + '\n');
             }
             windows.close();
+            ArrayList<GameWindow> temp = new ArrayList<>();
+            for (JInternalFrame e : desktopPane.getAllFrames())
+                if (e.getTitle().equals("Игровое поле"))
+                    temp.add((GameWindow) e);
+            for (GameWindow e : temp) {
+                e.saveCoordinates();
+            }
             System.exit(0);
         }
     }
 
-    private void setLookAndFeel(String className)
-    {
-        try
-        {
+    private void setLookAndFeel(String className) {
+        try {
             UIManager.setLookAndFeel(className);
             SwingUtilities.updateComponentTreeUI(this);
-        }
-        catch (ClassNotFoundException | InstantiationException
-                | IllegalAccessException | UnsupportedLookAndFeelException e)
-        {
+        } catch (ClassNotFoundException | InstantiationException
+                | IllegalAccessException | UnsupportedLookAndFeelException e) {
             // just ignore
         }
     }

@@ -56,9 +56,9 @@ public class GameVisualizer extends JPanel {
     private void drawCircle(Graphics2D g) {
         for (Circle circle : robotModel.getCircles()) {
             g.setColor(Color.ORANGE);
-            g.fillOval(circle.X, circle.Y, circle.R, circle.R);
+            g.fillOval((int)circle.getCenterX(), (int)circle.getCenterY(), (int)circle.getRadius(), (int)circle.getRadius());
             g.setColor(Color.BLACK);
-            g.drawOval(circle.X, circle.Y, circle.R, circle.R);
+            g.drawOval((int)circle.getCenterX(), (int)circle.getCenterY(), (int)circle.getRadius(), (int)circle.getRadius());
         }
     }
 

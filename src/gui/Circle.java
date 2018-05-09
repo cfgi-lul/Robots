@@ -1,24 +1,25 @@
 package gui;
 
-public class Circle extends javafx.scene.shape.Circle {
-    public int X;
-    public int Y;
-    public int R;
+class Circle extends javafx.scene.shape.Circle {
+    private int X;
+    private int Y;
+    private int R;
     Circle(int X, int Y,int R){
         super(X,Y,R);
         this.X = X;
         this.Y = Y;
         this.R = R;
     }
-    private int getCirclePositionX() {
+
+    int getX(){
         return X;
     }
 
-    private int getCirclePositionY() {
+    int getY(){
         return Y;
     }
 
-    private int getRadiusX() {
+    int getR(){
         return R;
     }
 }

@@ -1,10 +1,14 @@
 package gui;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.*;
+import java.util.ArrayList;
 
 public class Robot extends Observable {
 
@@ -23,8 +27,6 @@ public class Robot extends Observable {
 
     private static final double maxVelocity = 0.1;
     private static final double maxAngularVelocity = 0.001;
-    private int m_figurePositionX;
-    private int m_figurePositionY;
 
     public double getPositionX() {
         return m_robotPositionX;
@@ -46,23 +48,12 @@ public class Robot extends Observable {
         return m_targetPositionY;
     }
 
-
-    public int getFigurePositionY() {
-        return m_targetPositionY;
-    }
-
-    public int getFigurePositionX() {
-        return m_targetPositionY;
-    }
-
-
-
     public void addSquare(Point point) {
-        squares.add(new Square(10,10,point.x, point.y));
+        squares.add(new Square(30,30,point.x, point.y));
     }
 
     public void addCircle(Point point) {
-        circles.add(new Circle(point.x, point.y,10));
+        circles.add(new Circle(point.x, point.y,30));
     }
 
     public ArrayList<Square> getSquares() {
@@ -104,11 +95,6 @@ public class Robot extends Observable {
         m_targetPositionY = targetPoint.y;
     }
 
-    protected void setFigure(Point targetPoint){
-        m_figurePositionX = targetPoint.x;
-        m_figurePositionY = targetPoint.y;
-    }
-
     private static double distance(double x1, double y1, double x2, double y2) {
         double diffX = x1 - x2;
         double diffY = y1 - y2;
@@ -123,22 +109,56 @@ public class Robot extends Observable {
         return asNormalizedRadians(Math.atan2(diffY, diffX));
     }
 
+    public boolean collide(Point point){
+        boolean collision = false;
+        Ellipse2D.Double robot = new Ellipse2D.Double((int)point.getX(), (int)point.getY(), 15, 5);
+        for(Square obs: squares) {
+            if (robot.intersects(obs))
+                collision = true;
+        }
+        for(Circle obs: circles) {
+            if (robot.contains(new Point ((int)obs.getCenterX()+(int)obs.getRadius(), (int)obs.getCenterY()+(int)obs.getRadius()))
+                    || robot.contains(new Point ((int)obs.getCenterX()-(int)obs.getRadius(), (int)obs.getCenterY()+(int)obs.getRadius()))
+                    || robot.contains(new Point ((int)obs.getCenterX()+(int)obs.getRadius(), (int)obs.getCenterY()-(int)obs.getRadius()))
+                    || robot.contains(new Point ((int)obs.getCenterX()-(int)obs.getRadius(), (int)obs.getCenterY()-(int)obs.getRadius()))
+                    || robot.contains(new Point ((int)(obs.getCenterX()+obs.getRadius()*0.71), (int)(obs.getCenterY()+obs.getRadius()*0.71)))
+                    || robot.contains(new Point ((int)(obs.getCenterX()+obs.getRadius()*0.71), (int)(obs.getCenterY()-obs.getRadius()*0.71)))
+                    || robot.contains(new Point ((int)(obs.getCenterX()-obs.getRadius()*0.71), (int)(obs.getCenterY()+obs.getRadius()*0.71)))
+                    || robot.contains(new Point ((int)(obs.getCenterX()-obs.getRadius()*0.71), (int)(obs.getCenterY()-obs.getRadius()*0.71))))
+                collision = true;
+        }
+        if (m_robotPositionX < 0 || m_robotPositionY < 0 || m_robotPositionY > 470 || m_robotPositionX >  440)
+            collision=true;
+
+        return collision;
+    }
+
+    public void deleteAllHuinya(){
+        squares.clear();
+        circles.clear();
+    }
+
+    public void restart(){
+        m_robotPositionX = 100;
+        m_robotPositionY = 100;
+        m_robotDirection = 0;
+        m_targetPositionX = 100;
+        m_targetPositionY = 100;
+    }
+
     protected void tick() {
         double distance = distance(m_targetPositionX, m_targetPositionY,
                 m_robotPositionX, m_robotPositionY);
-        if (distance < 0.5)
-        {
+        if (distance < 0.5) {
             return;
         }
         double velocity = maxVelocity;
         double angleToTarget = angleTo(m_robotPositionX, m_robotPositionY, m_targetPositionX, m_targetPositionY);
         double angularVelocity = 0;
-        if (angleToTarget > m_robotDirection)
-        {
+        if (angleToTarget > m_robotDirection) {
             angularVelocity = maxAngularVelocity;
         }
-        if (angleToTarget < m_robotDirection)
-        {
+        if (angleToTarget < m_robotDirection) {
             angularVelocity = -maxAngularVelocity;
         }
 
@@ -146,32 +166,30 @@ public class Robot extends Observable {
         setChanged();
     }
 
-    private void moveRobot(double velocity, double angularVelocity, double duration)
-    {
-        velocity = applyLimits(velocity, 0, maxVelocity);
-        angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
-        double newX = m_robotPositionX + velocity / angularVelocity *
-                (Math.sin(m_robotDirection  + angularVelocity * duration) -
-                        Math.sin(m_robotDirection));
-        if (!Double.isFinite(newX))
-        {
-            newX = m_robotPositionX + velocity * duration * Math.cos(m_robotDirection);
+    private void moveRobot(double velocity, double angularVelocity, double duration) {
+        if (!collide(new Point((int)m_robotPositionX, (int)m_robotPositionY))) {
+            velocity = applyLimits(velocity, 0, maxVelocity);
+            angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
+            double newX = m_robotPositionX + velocity / angularVelocity *
+                    (Math.sin(m_robotDirection + angularVelocity * duration) -
+                            Math.sin(m_robotDirection));
+                if (!Double.isFinite(newX)) {
+                    newX = m_robotPositionX + velocity * duration * Math.cos(m_robotDirection);
+                }
+            double newY = m_robotPositionY - velocity / angularVelocity *
+                    (Math.cos(m_robotDirection + angularVelocity * duration) -
+                            Math.cos(m_robotDirection));
+            if (!Double.isFinite(newY)) {
+                newY = m_robotPositionY + velocity * duration * Math.sin(m_robotDirection);
+            }
+            m_robotPositionX = newX;
+            m_robotPositionY = newY;
+            double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration);
+            m_robotDirection = newDirection;
         }
-        double newY = m_robotPositionY - velocity / angularVelocity *
-                (Math.cos(m_robotDirection  + angularVelocity * duration) -
-                        Math.cos(m_robotDirection));
-        if (!Double.isFinite(newY))
-        {
-            newY = m_robotPositionY + velocity * duration * Math.sin(m_robotDirection);
-        }
-        m_robotPositionX = newX;
-        m_robotPositionY = newY;
-        double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration);
-        m_robotDirection = newDirection;
     }
 
-    private static double applyLimits(double value, double min, double max)
-    {
+    private static double applyLimits(double value, double min, double max) {
         if (value < min)
             return min;
         if (value > max)
@@ -179,16 +197,35 @@ public class Robot extends Observable {
         return value;
     }
 
-    private static double asNormalizedRadians(double angle)
-    {
-        while (angle < 0)
-        {
+    private static double asNormalizedRadians(double angle) {
+        while (angle < 0) {
             angle += 2*Math.PI;
         }
-        while (angle >= 2*Math.PI)
-        {
+        while (angle >= 2*Math.PI) {
             angle -= 2*Math.PI;
         }
         return angle;
+    }
+
+    public void saveCoordinates() throws IOException {
+        FileWriter r = new FileWriter("robot.txt", true);
+        r.write("Sq" + '\n');
+        for (Square e : squares) {
+            r.write(String.valueOf(e.x) + " ");
+            r.write(String.valueOf(e.y) + '\n');
+        }
+        r.write("Ci" + '\n');
+        for (Circle e : circles) {
+            r.write(String.valueOf(e.getX()) + " ");
+            r.write(String.valueOf(e.getY()) + '\n');
+        }
+        r.write("coord" + '\n');
+        r.write((int) m_robotPositionX +"\n");
+        r.write((int)m_robotPositionY + "\n");
+        r.write(m_robotDirection +"\n");
+        r.write(m_targetPositionX +"\n");
+        r.write(m_targetPositionY +"\n");
+        r.flush();
+        r.close();
     }
 }
