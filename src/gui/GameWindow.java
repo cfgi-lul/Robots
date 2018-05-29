@@ -1,6 +1,6 @@
 package gui;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.io.IOException;
 
 import javax.swing.*;
@@ -10,7 +10,7 @@ class GameWindow extends JInternalFrame
     private Robot robot;
     GameWindow(Robot robot)
     {
-        super("Игровое поле", false, true, true, true);
+        super("Игровое поле", true, true, true, true);
         GameVisualizer m_visualizer = new GameVisualizer(robot);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_visualizer, BorderLayout.CENTER);
@@ -41,5 +41,8 @@ class GameWindow extends JInternalFrame
         return menuBar;
     }
 
-
+    @Override
+    public Dimension getSize(Dimension rv) {
+        return super.getSize(rv);
+    }
 }

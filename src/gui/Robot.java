@@ -2,6 +2,8 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
+
 import java.awt.geom.Ellipse2D;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,15 +20,15 @@ public class Robot extends Observable {
     private volatile double m_robotPositionY = 100;
     private volatile double m_robotDirection = 0;
 
-
     private volatile ArrayList<Square> squares = new ArrayList<>();
     private volatile ArrayList<Circle> circles = new ArrayList<>();
 
     private volatile int m_targetPositionX = 150;
-    private volatile int m_targetPositionY = 100;
+    private volatile int m_targetPositionY = 150;
 
     private static final double maxVelocity = 0.1;
     private static final double maxAngularVelocity = 0.001;
+    public  Stack<Point> route = calculateRoute(new Point ((int)m_robotPositionX,(int)m_robotPositionY), new Point (m_targetPositionX,m_targetPositionY));
 
     public double getPositionX() {
         return m_robotPositionX;
@@ -82,10 +84,15 @@ public class Robot extends Observable {
         }, 0, 50);
         m_timer.schedule(new TimerTask()
         {
+
             @Override
             public void run()
             {
-                tick();
+                if(!route.isEmpty()) {
+                    tick(route.pop());
+                }
+                else tick(new Point((int)m_targetPositionX,(int)m_targetPositionY));
+
             }
         }, 0, 10);
     }
@@ -94,6 +101,8 @@ public class Robot extends Observable {
         m_targetPositionX = targetPoint.x;
         m_targetPositionY = targetPoint.y;
     }
+
+
 
     private static double distance(double x1, double y1, double x2, double y2) {
         double diffX = x1 - x2;
@@ -146,47 +155,103 @@ public class Robot extends Observable {
         m_targetPositionY = 100;
     }
 
-    protected void tick() {
-        double distance = distance(m_targetPositionX, m_targetPositionY,
+    protected void tick(Point tp) {
+        double distance = distance(tp.getX(), tp.getY(),
                 m_robotPositionX, m_robotPositionY);
         if (distance < 0.5) {
             return;
         }
         double velocity = maxVelocity;
-        double angleToTarget = angleTo(m_robotPositionX, m_robotPositionY, m_targetPositionX, m_targetPositionY);
+
+        double angleToTarget = angleTo(m_robotPositionX, m_robotPositionY, tp.getX(), tp.getY());
+        m_robotDirection = angleToTarget;
         double angularVelocity = 0;
-        if (angleToTarget > m_robotDirection) {
-            angularVelocity = maxAngularVelocity;
-        }
-        if (angleToTarget < m_robotDirection) {
-            angularVelocity = -maxAngularVelocity;
-        }
 
         moveRobot(velocity, angularVelocity, 10);
         setChanged();
     }
 
-    private void moveRobot(double velocity, double angularVelocity, double duration) {
-        if (!collide(new Point((int)m_robotPositionX, (int)m_robotPositionY))) {
-            velocity = applyLimits(velocity, 0, maxVelocity);
-            angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
-            double newX = m_robotPositionX + velocity / angularVelocity *
-                    (Math.sin(m_robotDirection + angularVelocity * duration) -
-                            Math.sin(m_robotDirection));
-                if (!Double.isFinite(newX)) {
-                    newX = m_robotPositionX + velocity * duration * Math.cos(m_robotDirection);
+    public Stack<Point> calculateRoute(Point start, Point end) {
+        Set<Point> visited = new HashSet<>();
+        Queue<Point> queue = new LinkedList<>();
+        Map<Point, Point> father = new HashMap<>();
+
+        queue.add(start);
+        visited.add(start);
+        while (!queue.isEmpty()){
+            Point point = queue.peek();
+            if(point.equals(end)) break;
+            queue.poll();
+            Set<Point> incidentPoints = incidentPoints(point);
+            for (Point w: incidentPoints){
+                if (!visited.contains(w) && !collide(w)) {
+                    visited.add(w);
+                    queue.add(w);
+                    father.put(w, point);
                 }
-            double newY = m_robotPositionY - velocity / angularVelocity *
-                    (Math.cos(m_robotDirection + angularVelocity * duration) -
-                            Math.cos(m_robotDirection));
-            if (!Double.isFinite(newY)) {
-                newY = m_robotPositionY + velocity * duration * Math.sin(m_robotDirection);
             }
-            m_robotPositionX = newX;
-            m_robotPositionY = newY;
-            double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration);
-            m_robotDirection = newDirection;
         }
+
+        return  restoreRoute(father, start, end);
+    }
+
+    public Stack<Point> restoreRoute(Map<Point, Point> father, Point robot, Point target){
+        Stack<Point> result = new Stack<>();
+
+        Point currentPoint = new Point(target.x, target.y);
+        while(!currentPoint.equals(robot)){
+            result.push(currentPoint);
+            currentPoint = father.get(currentPoint);
+        }
+        return result;
+    }
+
+    public Set<Point> incidentPoints(Point p){
+        Integer X[] = {0,1,1,1,0,-1,-1,-1};
+        Integer Y[] = {1,1,0,-1,-1,-1,0,1};
+        Set<Point> incidentPoints = new HashSet<>();
+
+        for(int i = 0; i < 8; i++)
+            incidentPoints.add(new Point((int)(p.getX() + X[i]), (int)(p.getY() + Y[i])));
+
+        return incidentPoints;
+    }
+
+
+
+
+    private void moveRobot(double velocity, double angularVelocity, double duration) {
+        velocity = applyLimits(velocity, 0, maxVelocity);
+        angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
+        double newX = m_robotPositionX + velocity / angularVelocity *
+                (Math.sin(m_robotDirection + angularVelocity * duration) -
+                        Math.sin(m_robotDirection));
+        if (!Double.isFinite(newX)) {
+            newX = m_robotPositionX + velocity * duration * Math.cos(m_robotDirection);
+        }
+        double newY = m_robotPositionY - velocity / angularVelocity *
+                (Math.cos(m_robotDirection + angularVelocity * duration) -
+                        Math.cos(m_robotDirection));
+        if (!Double.isFinite(newY)) {
+            newY = m_robotPositionY + velocity * duration * Math.sin(m_robotDirection);
+        }
+        m_robotPositionX = newX;
+        m_robotPositionY = newY;
+        double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration);
+        m_robotDirection = newDirection;
+
+//        if (temp != m_targetPositionX && temp1 != m_targetPositionY) {
+//            route = calculateRoute(new Point((int) m_robotPositionX, (int) m_robotPositionY),
+//                    new Point(m_targetPositionX, m_targetPositionY));
+//        }
+//        temp = m_targetPositionX;
+//        temp1 = m_targetPositionY;
+
+    }
+
+    public void rebuild (){
+        route = calculateRoute(new Point((int) m_robotPositionX, (int) m_robotPositionY),
+                new Point(m_targetPositionX, m_targetPositionY));
     }
 
     private static double applyLimits(double value, double min, double max) {

@@ -16,10 +16,13 @@ public class GameVisualizer extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     robotModel.setTargetPosition(e.getPoint());
+                    robotModel.rebuild();
                 } else if (SwingUtilities.isRightMouseButton(e)) {
                     robotModel.addSquare(e.getPoint());
+                    robotModel.rebuild();
                 } else if(SwingUtilities.isMiddleMouseButton(e)){
                     robotModel.addCircle(e.getPoint());
+                    robotModel.rebuild();
                 }
                 repaint();
             }
@@ -64,11 +67,11 @@ public class GameVisualizer extends JPanel {
 
     private void drawSquare(Graphics2D g) {
         for (Square square : robotModel.getSquares()) {
-            Rectangle rect = square;
+            Square rect = square;
             g.setColor(Color.ORANGE);
-            g.fillRect(rect.x, rect.y, rect.width, rect.height);
+            g.fillRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
             g.setColor(Color.BLACK);
-            g.drawRect(rect.x, rect.y, rect.width, rect.height);
+            g.drawRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
         }
     }
 
